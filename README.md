@@ -2,7 +2,7 @@
 
 This is a chrome extension. This extension colorizes the selected level.
 
-[![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/github-contribution-filte/gibpkmjjagconogpnahjoebpoojhgajj)
+[![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/github-contribution-color/kgfpgbojcffbfdchpfgnjbhklbehklof)
 
 ### Usage
 
