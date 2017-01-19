@@ -2,10 +2,7 @@
 //import 'chromereload/devonly';
 
 const isValidPage = () => {
-  return (() => {
-    const target = document.getElementsByClassName('js-contribution-graph');
-    return target ? target[0] : null;
-  })() !== null;
+  return document.getElementsByClassName('js-contribution-graph').length > 0;
 };
 
 const convertRGBToHex = (rgb) => {
