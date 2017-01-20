@@ -89,9 +89,63 @@ const colorizeContribution = (element) => {
 };
 
 if (isValidPage()) {
+
+  // add Contribution Level Click Event
   Array.prototype.forEach.call(document.getElementsByClassName('legend')[0].children, (element) => {
     element.addEventListener('click', () => {
       colorizeContribution(element);
     }, false);
   });
+
+  // [WIP] add month click event
+  const rects = Array.prototype.slice.call(document.getElementsByTagName('rect'));
+  const style = `outline: thin solid ${HIGHLIGHT_COLOR};`;
+  const months = Array.prototype.slice.call(document.querySelectorAll('.month'));
+
+  var monthWithYears = [];
+  rects.forEach(function(rect) {
+    var mwy = rect.getAttribute('data-date').substring(0,7);
+    if (monthWithYears.indexOf(mwy) < 0) {
+      monthWithYears.push(mwy);
+    }
+  });
+  months.forEach((month, i) => {
+    month.setAttribute('month', monthWithYears[i]);
+  });
+
+  months.forEach((element) => {
+    element.addEventListener('click', () => {
+
+      const specifiedMonthWithYear = element.getAttribute('month');
+
+      // Contribution Graph highlight.
+      Array.prototype.forEach.call(rects, (rect) => {
+        if (element.getAttribute('style')) {
+          rect.removeAttribute('style');
+        } else {
+
+          if (rect.getAttribute('data-date').indexOf(specifiedMonthWithYear) >= 0 ) {
+            rect.setAttribute('style', style);
+          } else {
+            rect.removeAttribute('style');
+          }
+        }
+      });
+
+      // months highlight.
+      months.forEach((month) => {
+        if (!month.isEqualNode(element)) {
+          month.removeAttribute('style');
+        } else {
+          if (!month.getAttribute('style')) {
+            month.setAttribute('style', style);
+          } else {
+            month.removeAttribute('style');
+          }
+        }
+      })
+
+    }, false);
+  });
 }
+
