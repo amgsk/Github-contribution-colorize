@@ -97,7 +97,7 @@ if (isValidPage()) {
     }, false);
   });
 
-  // add month click event
+  // [WIP] add month click event
   const rects = Array.prototype.slice.call(document.getElementsByTagName('rect'));
   const style = `outline: thin solid ${HIGHLIGHT_COLOR};`;
   const months = Array.prototype.slice.call(document.querySelectorAll('.month'));
