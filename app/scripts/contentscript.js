@@ -1,10 +1,24 @@
 // Enable chromereload by uncommenting this line:
 //import 'chromereload/devonly';
 
+let currentHighlightLevel = null;
+
 const HIGHLIGHT_COLOR = '#bb102e';
+
+const toArray = (elements) => {
+  return Array.prototype.slice.call(elements);
+};
 
 const isValidPage = () => {
   return document.getElementsByClassName('js-contribution-graph').length > 0;
+};
+
+const getLevels = () => {
+  return toArray(document.getElementsByClassName('legend')[0].children);
+};
+
+const getRects = () => {
+  return toArray(document.getElementsByTagName('rect'));
 };
 
 const convertRGBToHex = (rgb) => {
@@ -33,15 +47,17 @@ const setColor = (element, color) => {
 };
 
 const getColor = (element) => {
+  let color = null
   if (element.tagName === 'rect') {
-    return element.getAttribute('fill');
+    color = element.getAttribute('fill');
   } else {
-    return element.style['background-color'];
+    color = element.style['background-color'];
   }
+  return color.indexOf('rgb') === 0 ? convertRGBToHex(color) : color;
 };
 
 const resetHighlightLevel = () => {
-  Array.prototype.forEach.call(document.querySelectorAll('.legend > li'), function (element) {
+  getLevels().forEach((element) => {
     const originalColor = getOriginalColor(element);
     if (originalColor) {
       setColor(element, originalColor);
@@ -54,21 +70,23 @@ const highlightLevelElement = (element, originalLevelColor, selectedLevelHexColo
   if (originalLevelColor) {
     removeOriginalColor(element);
     setColor(element, originalLevelColor);
+    currentHighlightLevel = null;
   } else {
     setOriginalColor(element, selectedLevelHexColor);
     setColor(element, HIGHLIGHT_COLOR);
+    currentHighlightLevel = selectedLevelHexColor;
   }
 };
 
 const colorizeContribution = (element) => {
 
   const originalLevelColor = getOriginalColor(element);
-  const selectedLevelColor = originalLevelColor || convertRGBToHex(getColor(element));
+  const selectedLevelColor = originalLevelColor || getColor(element);
 
   resetHighlightLevel();
 
   // colorize Contribution Graph
-  Array.prototype.forEach.call(document.getElementsByTagName('rect'), (rect) => {
+  getRects().forEach((rect) => {
     const currentColor  = getColor(rect);
     const originalColor = getOriginalColor(rect);
 
@@ -89,9 +107,22 @@ const colorizeContribution = (element) => {
 };
 
 if (isValidPage()) {
-  Array.prototype.forEach.call(document.getElementsByClassName('legend')[0].children, (element) => {
-    element.addEventListener('click', () => {
-      colorizeContribution(element);
+
+  const target = document.querySelectorAll('.js-repo-filter > div')[0];
+  new MutationObserver((mutations) => {
+    getLevels().forEach((element) => {
+      element.addEventListener('click', () => {
+        colorizeContribution(element);
+      });
     }, false);
-  });
+
+    if (currentHighlightLevel) {
+      getLevels().forEach((element) => {
+        if (getColor(element) === currentHighlightLevel) {
+          colorizeContribution(element);
+        }
+      });
+    }
+  }).observe( target, {childList: true} );
 }
+
