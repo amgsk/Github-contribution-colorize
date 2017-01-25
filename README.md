@@ -9,7 +9,7 @@ This extension colorizes the selected level.
 
 Click the level of the contribution graph as shown in the image below.
 
-![](http://i.imgur.com/KtvSwNt.png "")
+![](http://i.imgur.com/FAeA5na.png "")
 
 ### contributing
 
